@@ -18,6 +18,7 @@ namespace TextOutput
             "=================================\n"
                 + "Which grade level would you like?\n\n"
                 + " 0:  PreK\n"
+                + " 1:  1st Grade\n"
                 + " 2:  2nd Grade\n"
                 + "-1:  Exit Program\n"
                 + "=================================";
@@ -38,6 +39,9 @@ namespace TextOutput
                 { 
                     case 0:
                         GenPreK();
+                        break;
+                    case 1:
+                        GenFirstGrade();
                         break;
                     case 2:
                         GenSecondGrade();
@@ -80,6 +84,20 @@ namespace TextOutput
             }  
         }
 
+        private static void GenFirstGrade()
+        {
+            int startValue = readInt("Starting value?");
+            int stopValue = readInt("Stopping value? (Must be greater than or equal to start value");
+            int maxAdden = readInt("Max adden / subtrahend? (EX: If  5+10, max would be 10");
+            for (int i = startValue; i <= stopValue; i++)
+            {
+                for (int j = 0; j <= maxAdden; j++)
+                {
+                    Console.WriteLine(String.Format("{0},{1} + {2} = _", i + j, i, j));
+                }
+            }  
+        }
+
         /// <summary>
         /// Method that generates text output that works with the Second Grade selection in Mathotron.
         /// 
@@ -90,10 +108,10 @@ namespace TextOutput
         {
             int startValue = readInt("Starting value?");
             int stopValue = readInt("Stopping value? (Must be greater than or equal to start value");
-            int highestMultiple = readInt("How large would you like the largest multiple to be? (EX: 2 x 10 would be 10");
+            int highestFactor = readInt("How large would you like the largest factor to be? (EX: 2 x 10 would be 10");
             for (int i = startValue; i <= stopValue; i++)
             {
-                for (int j = 0; j <= highestMultiple; j++)
+                for (int j = 0; j <= highestFactor; j++)
                 {
                     Console.WriteLine(String.Format("{0},{1} * {2} = _", i * j, i, j));
                 }
