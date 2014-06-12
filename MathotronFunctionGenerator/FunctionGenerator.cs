@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.IO;
 
 namespace TextOutput
 {
@@ -17,11 +18,13 @@ namespace TextOutput
         private static readonly string MENU = 
             "=================================\n"
                 + "Which grade level would you like?\n\n"
-                + " 0:  PreK\n"
-                + " 1:  1st Grade\n"
-                + " 2:  2nd Grade\n"
+                + " 0:  PreK (Counting)\n"
+                + " 1:  1st Grade (Integer Addition)\n"
+                + " 2:  2nd Grade (Integer Multiplication)\n"
+                + " 3:  3rd Grade (Integer Division)\n"
                 + "-1:  Exit Program\n"
                 + "=================================";
+
         /// <summary>
         /// Intital beginning point of the program.
         /// Allows the user to select an option from a menu.
@@ -46,6 +49,9 @@ namespace TextOutput
                     case 2:
                         GenSecondGrade();
                         break;
+                    case 3:
+                        GenThirdGrade();
+                        break;
                     case -1:
                         exit = true;
                         break;
@@ -66,36 +72,51 @@ namespace TextOutput
         /// </summary>
         private static void GenPreK()
         {
-            int startValue = readInt("Starting value?");
-            int stopValue = readInt("Stopping value? (Must be greater than or equal to start value");
-            int numberLineSize = 5;
-            for (int i = startValue; i <= stopValue; i++)
+            using (StreamWriter outputFile = new StreamWriter("PreK.functions"))
             {
-                for (int j = 0; j < numberLineSize - 2; j++)
+                int startValue = readInt("Starting value?");
+                int stopValue = readInt("Stopping value? (Must be greater than or equal to start value");
+                int numberLineSize = 5;
+                for (int i = startValue; i <= stopValue; i++)
                 {
-                    String s = String.Format("{0} {1} {2} {3} {4}",
-                        (i - 3) + j,
-                        (i - 2) + j,
-                        (i - 1) + j,
-                        i + j,
-                        (i + 1) + j);
-                    Console.WriteLine(i + "," + s.Replace("" + i, "_"));
-                }
-            }  
+                    for (int j = 0; j < numberLineSize - 2; j++)
+                    {
+                        String s = String.Format("{0} {1} {2} {3} {4}",
+                            (i - 3) + j,
+                            (i - 2) + j,
+                            (i - 1) + j,
+                            i + j,
+                            (i + 1) + j);
+                        Console.WriteLine(i + "," + s.Replace("" + i, "_"));
+                        outputFile.WriteLine(i + "," + s.Replace("" + i, "_"));
+                    }
+                } 
+            }             
         }
 
+        /// <summary>
+        /// Method that generates text output that works with the First Grade selection in Mathotron.
+        /// 
+        /// output format:  (i+j), i + j = _
+        /// Example:        7,2 + 5 = _
+        /// </summary>
         private static void GenFirstGrade()
         {
-            int startValue = readInt("Starting value?");
-            int stopValue = readInt("Stopping value? (Must be greater than or equal to start value");
-            int maxAdden = readInt("Max adden / subtrahend? (EX: If  5+10, max would be 10");
-            for (int i = startValue; i <= stopValue; i++)
+            using (StreamWriter outputFile = new StreamWriter("FirstGrade.functions"))
             {
-                for (int j = 0; j <= maxAdden; j++)
+                int startValue = readInt("Starting value?");
+                int stopValue = readInt("Stopping value? (Must be greater than or equal to start value");
+                int maxAdden = readInt("Max adden / subtrahend? (EX: If  5+10, max would be 10");
+                for (int i = startValue; i <= stopValue; i++)
                 {
-                    Console.WriteLine(String.Format("{0},{1} + {2} = _", i + j, i, j));
+                    for (int j = 0; j <= maxAdden; j++)
+                    {
+                        Console.WriteLine(String.Format("{0},{1} + {2} = _", i + j, i, j));
+                        outputFile.WriteLine(String.Format("{0},{1} + {2} = _", i + j, i, j));
+                    }
                 }
-            }  
+            }
+              
         }
 
         /// <summary>
@@ -106,16 +127,46 @@ namespace TextOutput
         /// </summary>
         private static void GenSecondGrade()
         {
-            int startValue = readInt("Starting value?");
-            int stopValue = readInt("Stopping value? (Must be greater than or equal to start value");
-            int highestFactor = readInt("How large would you like the largest factor to be? (EX: 2 x 10 would be 10");
-            for (int i = startValue; i <= stopValue; i++)
+            using (StreamWriter outputFile = new StreamWriter("SecondGrade.functions"))
             {
-                for (int j = 0; j <= highestFactor; j++)
+                int startValue = readInt("Starting value?");
+                int stopValue = readInt("Stopping value? (Must be greater than or equal to start value");
+                int highestFactor = readInt("How large would you like the largest factor to be? (EX: 2 x 10 would be 10");
+                for (int i = startValue; i <= stopValue; i++)
                 {
-                    Console.WriteLine(String.Format("{0},{1} * {2} = _", i * j, i, j));
+                    for (int j = 0; j <= highestFactor; j++)
+                    {
+                        Console.WriteLine(String.Format("{0},{1} * {2} = _", i * j, i, j));
+                        outputFile.WriteLine(String.Format("{0},{1} * {2} = _", i * j, i, j));
+                    }
                 }
-            }  
+            }
+              
+        }
+
+        /// <summary>
+        ///Method that generates text output that works with the Third Grade selection in Mathotron.
+        ///
+        /// output format:  j,(i*j) / i = _
+        /// Example:        5,45 / 9 = _
+        /// </summary>
+        private static void GenThirdGrade()
+        {
+            using (StreamWriter outputFile = new StreamWriter("ThirdGrade.functions"))
+            {
+                int startValue = readInt("Starting value?");
+                int stopValue = readInt("Stopping value? (Must be greater than or equal to start value");
+                int highestFactor = readInt("How large would you like the largest factor to be? (EX: 10 / 2 would be 5 (2 * 5)");
+                for (int i = startValue; i <= stopValue; i++)
+                {
+                    for (int j = 0; j <= highestFactor; j++)
+                    {
+                        Console.WriteLine(String.Format("{0},{1} / {2} = _", j, i * j, i));
+                        outputFile.WriteLine(String.Format("{0},{1} / {2} = _", j, i * j, i));
+                    }
+                }  
+            }
+             
         }
 
         /// <summary>
