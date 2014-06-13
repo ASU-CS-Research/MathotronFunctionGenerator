@@ -15,6 +15,7 @@ namespace TextOutput
     /// </summary>
     class FunctionGenerator
     {
+        private static Random rand;
         private static readonly string MENU = 
             "=================================\n"
                 + "Which grade level would you like?\n\n"
@@ -22,6 +23,7 @@ namespace TextOutput
                 + " 1:  1st Grade (Integer Addition)\n"
                 + " 2:  2nd Grade (Integer Multiplication)\n"
                 + " 3:  3rd Grade (Integer Division)\n"
+                + " 4:  4th Grade (Integer Division w/ Remainders)\n"
                 + "-1:  Exit Program\n"
                 + "=================================";
 
@@ -32,32 +34,43 @@ namespace TextOutput
         /// <param name="args">Command Line Arguments (Unused)</param>
         public static void Main(string[] args)
         {
+            rand = new Random();
             bool exit = false;
             int grade;
             Console.WriteLine("This program outputs generated text for Mathotron to the console."); 
             while (!exit)
             {
                 grade = readInt(MENU);
-                switch (grade)
-                { 
-                    case 0:
-                        GenPreK();
-                        break;
-                    case 1:
-                        GenFirstGrade();
-                        break;
-                    case 2:
-                        GenSecondGrade();
-                        break;
-                    case 3:
-                        GenThirdGrade();
-                        break;
-                    case -1:
-                        exit = true;
-                        break;
-                    default:
-                        Console.WriteLine("Invalid option selected.");
-                        break;
+                try
+                {
+                    switch (grade)
+                    {
+                        case 0:
+                            GenPreK();
+                            break;
+                        case 1:
+                            GenFirstGrade();
+                            break;
+                        case 2:
+                            GenSecondGrade();
+                            break;
+                        case 3:
+                            GenThirdGrade();
+                            break;
+                        case 4:
+                            GenFourthGrade();
+                            break;
+                        case -1:
+                            exit = true;
+                            break;
+                        default:
+                            Console.WriteLine("Invalid option selected.");
+                            break;
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
                 }
             }
         }
@@ -116,7 +129,6 @@ namespace TextOutput
                     }
                 }
             }
-              
         }
 
         /// <summary>
@@ -141,7 +153,6 @@ namespace TextOutput
                     }
                 }
             }
-              
         }
 
         /// <summary>
@@ -166,7 +177,59 @@ namespace TextOutput
                     }
                 }  
             }
-             
+        }
+
+        /// <summary>
+        /// Method that generates text output that works with the Fourth Grade selection in mathotron.
+        ///
+        /// output format:  dividend/divisor r dividend%divisor,dividend / divisor = _
+        /// Example:        5r2,47 / 9 = _
+        /// </summary>
+        private static void GenFourthGrade()
+        {
+            using (StreamWriter outputFile = new StreamWriter("FourthGrade.functions"))
+            {
+                int dividendMaxAmount = readInt("Max amount for dividend?");
+                int dividendMinAmount = readInt("Min amount for dividend?");
+                int divisorMaxAmount = readNonZeroInt("Max amount for divisor?");
+                int divisorMinAmount = readNonZeroInt("Min amount for divisor?");
+                int formulaAmount = readInt("How many formulas should be created?");
+
+                for (int i = 0; i < formulaAmount; i++)
+                {
+                    int dividend;
+                    int divisor;
+                    do
+                    {
+                        dividend = rand.Next(dividendMinAmount, dividendMaxAmount);
+                        divisor = rand.Next(divisorMinAmount, divisorMaxAmount);
+                    } while (dividend % divisor == 0);
+                    String s = String.Format(
+                        "{0}r{1},{2} / {3} = _",
+                        dividend / divisor,
+                        dividend % divisor,
+                        dividend,
+                        divisor);
+                    Console.WriteLine(s);
+                    outputFile.WriteLine(s);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Helper method that ensures that the returned value is not a zero.
+        /// </summary>
+        /// <param name="message">Message or prompt to be printed to the screen.</param>
+        /// <returns>User input integer value, non-zero.</returns>
+        private static int readNonZeroInt(string message)
+        {
+            int nonZero = readInt(message);
+            while (nonZero == 0)
+            {
+                Console.WriteLine("This value cannot equal zero, please enter a new value.");
+                nonZero = readInt(message);
+            }
+            return nonZero;
         }
 
         /// <summary>
@@ -174,7 +237,7 @@ namespace TextOutput
         /// a valid integer.  Will continue to ask for a proper int until was is entered.
         /// </summary>
         /// <param name="message">Message or prompt to be printed to the screen.</param>
-        /// <returns></returns>
+        /// <returns>User input integer value.</returns>
         private static int readInt(string message)
         { 
             int i;
@@ -186,12 +249,28 @@ namespace TextOutput
             return i;
         }
 
+        /// <summary>
+        /// Helper method that prints a message to the screen and then returns
+        /// a valid double.  Will continue to ask for a proper double until was is entered.
+        /// </summary>
+        /// <param name="message">Message or prompt to be printed to the screen.</param>
+        /// <returns>User input double value.</returns>
+        private static double readDouble(string message)
+        {
+            double d;
+            bool parsed = Double.TryParse(readLine(message), out d);
+            while (!parsed)
+            {
+                parsed = Double.TryParse(readLine("Please enter a valid decimal"), out d);
+            }
+            return d;
+        }
 
         /// <summary>
         /// Helper method that prints a message to the screen and returns a string from the user.
         /// </summary>
         /// <param name="message">Message or prompt to be printed to the screen.</param>
-        /// <returns></returns>
+        /// <returns>User input string value.</returns>
         private static string readLine(string message)
         {
             Console.WriteLine(message);
