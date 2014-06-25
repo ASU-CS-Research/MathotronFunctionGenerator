@@ -103,31 +103,66 @@ namespace TextOutput
                         Console.WriteLine(i + "," + s.Replace("" + i, "_"));
                         outputFile.WriteLine(i + "," + s.Replace("" + i, "_"));
                     }
-                } 
+                }
+                Console.WriteLine("Output to: " + ((FileStream)outputFile.BaseStream).Name);
             }             
         }
 
         /// <summary>
         /// Method that generates text output that works with the First Grade selection in Mathotron.
+        /// Can output Addition or Subtraction.
         /// 
+        /// Addition
         /// output format:  (i+j), i + j = _
         /// Example:        7,2 + 5 = _
+        /// 
+        /// Subtraction
+        /// output format:  (i-j), i - j = _
+        /// Example:        5,8 - 5 = _
         /// </summary>
         private static void GenFirstGrade()
         {
             using (StreamWriter outputFile = new StreamWriter("FirstGrade.functions"))
             {
-                int startValue = readInt("Starting value?");
-                int stopValue = readInt("Stopping value? (Must be greater than or equal to start value");
-                int maxAdden = readInt("Max adden / subtrahend? (EX: If  5+10, max would be 10");
-                for (int i = startValue; i <= stopValue; i++)
+                string input = readLine("Addition or Subtraction? (a/s)").ToLower();
+                while (!input.Equals("a") && !input.Equals("s"))
                 {
-                    for (int j = 0; j <= maxAdden; j++)
+                    input = readLine("Please enter either a or s to select an option.").ToLower();
+                }
+                if (input.Equals("a"))
+                {
+                    int startValue = readInt("Starting value?");
+                    int stopValue = readInt("Stopping value? (Must be greater than or equal to start value");
+                    int maxAdden = readInt("Max adden? (EX: If  5+10, max would be 10");
+                    for (int i = startValue; i <= stopValue; i++)
                     {
-                        Console.WriteLine(String.Format("{0},{1} + {2} = _", i + j, i, j));
-                        outputFile.WriteLine(String.Format("{0},{1} + {2} = _", i + j, i, j));
+                        for (int j = 0; j <= maxAdden; j++)
+                        {
+                            Console.WriteLine(String.Format("{0},{1} + {2} = _", i + j, i, j));
+                            outputFile.WriteLine(String.Format("{0},{1} + {2} = _", i + j, i, j));
+                        }
                     }
                 }
+                else
+                {
+                    int startValue = readInt("Starting value?");
+                    int stopValue = readInt("Stopping value? (Must be greater than or equal to start value");
+                    int maxAdden = readInt("Max subtrahend? (EX: If  15-10, max would be 10");
+                    bool negativeNumbers = readBool("Include forumlas with negative answers? (true/false)");
+                    for (int i = startValue; i <= stopValue; i++)
+                    {
+                        for (int j = 0; j <= maxAdden; j++)
+                        {
+                            if (i - j < 0 && !negativeNumbers)
+                            {
+                                continue;
+                            }
+                            Console.WriteLine(String.Format("{0},{1} - {2} = _", i - j, i, j));
+                            outputFile.WriteLine(String.Format("{0},{1} - {2} = _", i - j, i, j));
+                        }
+                    }
+                }
+                Console.WriteLine("Output to: " + ((FileStream)outputFile.BaseStream).Name);
             }
         }
 
@@ -152,6 +187,7 @@ namespace TextOutput
                         outputFile.WriteLine(String.Format("{0},{1} * {2} = _", i * j, i, j));
                     }
                 }
+                Console.WriteLine("Output to: " + ((FileStream)outputFile.BaseStream).Name);
             }
         }
 
@@ -175,7 +211,8 @@ namespace TextOutput
                         Console.WriteLine(String.Format("{0},{1} / {2} = _", j, i * j, i));
                         outputFile.WriteLine(String.Format("{0},{1} / {2} = _", j, i * j, i));
                     }
-                }  
+                }
+                Console.WriteLine("Output to: " + ((FileStream)outputFile.BaseStream).Name);
             }
         }
 
@@ -213,6 +250,7 @@ namespace TextOutput
                     Console.WriteLine(s);
                     outputFile.WriteLine(s);
                 }
+                Console.WriteLine("Output to: " + ((FileStream)outputFile.BaseStream).Name);
             }
         }
 
@@ -234,7 +272,7 @@ namespace TextOutput
 
         /// <summary>
         /// Helper method that prints a message to the screen and then returns
-        /// a valid integer.  Will continue to ask for a proper int until was is entered.
+        /// a valid integer.  Will continue to ask for a proper int until one is entered.
         /// </summary>
         /// <param name="message">Message or prompt to be printed to the screen.</param>
         /// <returns>User input integer value.</returns>
@@ -251,7 +289,7 @@ namespace TextOutput
 
         /// <summary>
         /// Helper method that prints a message to the screen and then returns
-        /// a valid double.  Will continue to ask for a proper double until was is entered.
+        /// a valid double.  Will continue to ask for a proper double until one is entered.
         /// </summary>
         /// <param name="message">Message or prompt to be printed to the screen.</param>
         /// <returns>User input double value.</returns>
@@ -264,6 +302,22 @@ namespace TextOutput
                 parsed = Double.TryParse(readLine("Please enter a valid decimal"), out d);
             }
             return d;
+        }
+        /// <summary>
+        /// Helper method that prints a message to the screen then returns
+        /// a valid boolean.  Will continue to ask for a proper boolean until one is entered.
+        /// </summary>
+        /// <param name="message">Message or prompt to be printed to the screen.</param>
+        /// <returns>User input true or false.</returns>
+        private static bool readBool(string message)
+        {
+            bool b;
+            bool parsed = Boolean.TryParse(readLine(message), out b);
+            while (!parsed)
+            {
+                parsed = Boolean.TryParse(readLine("Please enter either true or false"), out b);
+            }
+            return b;
         }
 
         /// <summary>
