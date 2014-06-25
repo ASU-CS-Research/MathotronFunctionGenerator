@@ -255,6 +255,34 @@ namespace TextOutput
         }
 
         /// <summary>
+        /// Helper method that prints a message to the screen and returns a string from the user.
+        /// </summary>
+        /// <param name="message">Message or prompt to be printed to the screen.</param>
+        /// <returns>User input string value.</returns>
+        private static string readLine(string message)
+        {
+            Console.WriteLine(message);
+            return Console.ReadLine();
+        }
+
+        /// <summary>
+        /// Helper method that prints a message to the screen and then returns
+        /// a valid integer.  Will continue to ask for a proper int until one is entered.
+        /// </summary>
+        /// <param name="message">Message or prompt to be printed to the screen.</param>
+        /// <returns>User input integer value.</returns>
+        private static int readInt(string message)
+        {
+            int i;
+            bool parsed = Int32.TryParse(readLine(message), out i);
+            while (!parsed)
+            {
+                parsed = Int32.TryParse(readLine("Please enter a valid integer"), out i);
+            }
+            return i;
+        }
+
+        /// <summary>
         /// Helper method that ensures that the returned value is not a zero.
         /// </summary>
         /// <param name="message">Message or prompt to be printed to the screen.</param>
@@ -268,23 +296,6 @@ namespace TextOutput
                 nonZero = readInt(message);
             }
             return nonZero;
-        }
-
-        /// <summary>
-        /// Helper method that prints a message to the screen and then returns
-        /// a valid integer.  Will continue to ask for a proper int until one is entered.
-        /// </summary>
-        /// <param name="message">Message or prompt to be printed to the screen.</param>
-        /// <returns>User input integer value.</returns>
-        private static int readInt(string message)
-        { 
-            int i;
-            bool parsed = Int32.TryParse(readLine(message), out i);
-            while (!parsed)
-            {
-                parsed = Int32.TryParse(readLine("Please enter a valid integer"), out i);
-            }
-            return i;
         }
 
         /// <summary>
@@ -318,17 +329,6 @@ namespace TextOutput
                 parsed = Boolean.TryParse(readLine("Please enter either true or false"), out b);
             }
             return b;
-        }
-
-        /// <summary>
-        /// Helper method that prints a message to the screen and returns a string from the user.
-        /// </summary>
-        /// <param name="message">Message or prompt to be printed to the screen.</param>
-        /// <returns>User input string value.</returns>
-        private static string readLine(string message)
-        {
-            Console.WriteLine(message);
-            return Console.ReadLine();
         }
     }
 }
